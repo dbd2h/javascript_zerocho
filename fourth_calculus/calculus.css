@@ -1,0 +1,50 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.calculus {
+  height: 600px;
+  width: 500px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.calculus__division {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.calculus__operator {
+  height: 100px;
+  width: 100px;
+  border: solid;
+  text-align: center;
+  font-size: 30px;
+}
+.calculus__screen {
+  height: 100px;
+  width: 366.6px;
+  border: solid;
+  font-size: 30px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 20px;
+}
+.calculus__btn {
+  height: 100px;
+  width: 100px;
+  border: solid;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  background-color: rgb(230, 230, 230);
+}

@@ -10,7 +10,7 @@
   <body>
     <form class="start-screen">
       <input
-        class="start-screen__name-input"
+        id="start-screen__name-input"
         placeholder="주인공 이름을 입력하세요!"
       />
       <button class="start-screen__start">시작</button>
@@ -22,14 +22,14 @@
       <div class="hero-inf__hero-xp"></div>
       <div class="hero-inf__hero-att"></div>
     </div>
-    <form class="game-menu">
+    <form class="game-menu hidden">
       <div class="game-menu__menu-1">1. 모험</div>
       <div class="game-menu__menu-2">2. 휴식</div>
       <div class="game-menu__menu-3">3. 종료</div>
-      <input class="game-menu__input-number" />
+      <input id="game-menu__input-number" />
       <button class="game-menu__input-button">입력</button>
     </form>
-    <form class="battle-menu">
+    <form class="battle-menu hidden">
       <div class="battle-menu__battle-1">1. 공격</div>
       <div class="battle-menu__battle-2">2. 회복</div>
       <div class="battle-menu__battle-3">3. 도망</div>

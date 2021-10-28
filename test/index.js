@@ -1,28 +1,17 @@
-const clockTitle = document.querySelector(".js-clock");
-let day = 0;
-let hour = 0;
-let minute = 0;
-let second = 0;
-
-function getTime() {
-  const date = new Date();
-  d = String(date.getDate());
-  h = String(date.getHours());
-  m = String(date.getMinutes());
-  s = String(date.getSeconds());
-  fakeList = [d, h, m, s];
-  for (let i = 1; i < 4; i++) {
-    if (fakeList[i] < 10) {
-      fakeList[i] = "0" + String(fakeList[i]);
-    }
-  }
-  return fakeList;
+function delay(n) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, n * 1000);
+  });
 }
 
-function getClock() {
-  const dateList = getTime();
-  clockTitle.innerHTML = `${dateList[0]}:${dateList[1]}:${dateList[2]}:${dateList[3]}`;
+async function myAsyncFunction() {
+  //Do what you want here
+  console.log("Before the delay");
+
+  await delay(5);
+
+  console.log("After the delay");
+  //Do what you want here too
 }
 
-getClock();
-setInterval(getClock, 1000);
+myAsyncFunction();

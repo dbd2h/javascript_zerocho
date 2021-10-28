@@ -15,8 +15,8 @@
       />
       <button class="start-screen__start">시작</button>
     </form>
-    <div class="hero-inf">
-      <div class="hero-inf__hero-stat"></div>
+    <div class="hero-inf hidden">
+      <div class="hero-inf__hero-name"></div>
       <div class="hero-inf__hero-level"></div>
       <div class="hero-inf__hero-hp"></div>
       <div class="hero-inf__hero-xp"></div>
@@ -27,21 +27,21 @@
       <div class="game-menu__menu-2">2. 휴식</div>
       <div class="game-menu__menu-3">3. 종료</div>
       <input id="game-menu__input-number" />
-      <button class="game-menu__input-button">입력</button>
+      <button id="game-menu__input-button">입력</button>
     </form>
+    <div class="monster-inf hidden">
+      <span class="monster-inf__monster-name"></span>
+      <span class="monster-inf__monster-hp"></span>
+      <span class="monster-inf__monster-att"></span>
+    </div>
+    <div class="message"></div>
     <form class="battle-menu hidden">
       <div class="battle-menu__battle-1">1. 공격</div>
       <div class="battle-menu__battle-2">2. 회복</div>
       <div class="battle-menu__battle-3">3. 도망</div>
-      <input class="battle-menu__battle-input" />
+      <input id="battle-menu__battle-input" />
       <button class="battle-menu__battle-button">입력</button>
     </form>
-    <div class="message"></div>
-    <div class="monster-stat">
-      <span class="monster-stat__monster-name"></span>
-      <span class="monster-stat__monster-hp"></span>
-      <span class="monster-stat__monster-att"></span>
-    </div>
 
     <script src="RPG-game.js"></script>
   </body>

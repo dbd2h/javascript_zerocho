@@ -15,6 +15,7 @@ const $message = document.querySelector(".message");
 let oneOneString = null;
 let oneOneVar = 0;
 let timeAlong = 0;
+let monsterHp = null;
 
 function delay(time) {
   return new Promise(function (resolve) {
@@ -45,13 +46,14 @@ const monsterList = [
   { name: "마왕", hp: 150, att: 35, xp: 50 },
 ];
 
-async function battleMenuSelect1(monsterHp, randomNumber) {
+async function battleMenuSelect1(randomNumber) {
   $battleMenu.classList.toggle("hidden");
   oneOneString = "플레이어의 공격!";
   await oneOneFunc();
   await delay(200);
   monsterHp -= hero.att;
   $monsterHp.innerHTML = `HP: ${monsterHp}/${monsterList[randomNumber].hp}`;
+  $battleMenu.classList.toggle("hidden");
 }
 
 async function gameMenuSelect1() {
@@ -67,7 +69,7 @@ async function gameMenuSelect1() {
   }
   const randomNumber = Math.floor(Math.random() * randomNumberStan);
   $monsterName.innerHTML = monsterList[randomNumber].name;
-  let monsterHp = monsterList[randomNumber].hp;
+  monsterHp = monsterList[randomNumber].hp;
   $monsterHp.innerHTML = `HP: ${monsterHp}/${monsterList[randomNumber].hp}`;
   $monsterAtt.innerHTML = `Att: ${monsterList[randomNumber].att}`;
   oneOneString = `야생의 ${monsterList[randomNumber].name}이 나타났다.`;
@@ -81,7 +83,7 @@ async function gameMenuSelect1() {
     event.preventDefault();
     const battleSelectNumber = event.target["battle-menu__battle-input"].value;
     if (battleSelectNumber == 1) {
-      battleMenuSelect1(monsterHp, randomNumber);
+      battleMenuSelect1(randomNumber);
     } else if (battleSelectNumber == 2) {
     } else if (battleSelectNumber == 3) {
     } else {

@@ -13,9 +13,24 @@ const $monsterHp = document.querySelector(".monster-inf__monster-hp");
 const $monsterAtt = document.querySelector(".monster-inf__monster-att");
 const $message = document.querySelector(".message");
 let oneOneString = null;
-let oneOneVar = 0;
-let timeAlong = 0;
 let monsterHp = null;
+
+function reset() {
+  $message.innerHTML = "";
+  $startScreen.classList.remove("hidden");
+  $gameMenu.classList.add("hidden");
+  $monsterInf.classList.add("hidden");
+  $heroInf.classList.add("hidden");
+  $battleMenu.classList.add("hidden");
+  oneOneString = 0;
+  monsterHp = null;
+  hero.name = "";
+  hero.xp = 0;
+  hero.level = 1;
+  hero.att = 10;
+  hero.maxHp = 100;
+  hero.hp = 100;
+}
 
 function delay(time) {
   return new Promise(function (resolve) {
@@ -29,6 +44,40 @@ async function oneOneFunc() {
     $message.innerHTML += oneOneString[i];
     await delay(80);
   }
+}
+
+async function levelUp() {
+  if (hero.xp >= hero.level * 15) {
+    hero.xp -= $heroLevel * 15;
+    hero.level += 1;
+    await delay(200);
+    $heroXp.innerHTML = `XP: ${hero.xp}/${hero.level * 15}`;
+    oneOneString = `레벨업! ${hero.level}레벨이 되었다.`;
+    await oneOneFunc();
+    await delay(200);
+    hero.maxHp = hero.level * 50 + 50;
+    hero.hp = hero.maxHp;
+    hero.att = hero.att + 5;
+    $heroHp.innerHTML = `HP: ${hero.hp}/${hero.maxHp}`;
+    $heroAtt.innerHTML = `Att: ${hero.att}`;
+    oneOneString = "플레이어의 최대체력과 공격력이 올라갔다.";
+    await oneOneFunc();
+    await delay(200);
+    return;
+  }
+  $heroXp.innerHTML = `XP: ${hero.xp}/${hero.level * 15}`;
+  return;
+}
+
+async function monsterAtt(randomNumber) {
+  oneOneString = `${monsterList[randomNumber].name}의 공격`;
+  await oneOneFunc();
+  await delay(200);
+  hero.hp -= monsterList[randomNumber].att;
+  $heroHp.innerHTML = `HP: ${hero.hp}/${hero.maxHp}`;
+  await delay(1000);
+  $battleMenu.classList.toggle("hidden");
+  $message.innerHTML = "무엇을 할까?";
 }
 
 const hero = {
@@ -52,8 +101,25 @@ async function battleMenuSelect1(randomNumber) {
   await oneOneFunc();
   await delay(200);
   monsterHp -= hero.att;
+  if (monsterHp <= 0) {
+    $monsterHp.innerHTML = `HP: 0/${monsterList[randomNumber].hp}`;
+    await delay(200);
+    oneOneString = "플레이어의 승리";
+    await oneOneFunc();
+    await delay(1000);
+    hero.xp += monsterList[randomNumber].xp;
+    oneOneString = `경험치 ${monsterList[randomNumber].xp}xp 획득`;
+    await oneOneFunc();
+    levelUp();
+    await delay(1000);
+    $gameMenu.classList.toggle("hidden");
+    $monsterInf.classList.toggle("hidden");
+    $message.innerHTML = "";
+    return;
+  }
   $monsterHp.innerHTML = `HP: ${monsterHp}/${monsterList[randomNumber].hp}`;
-  $battleMenu.classList.toggle("hidden");
+  await delay(1000);
+  monsterAtt(randomNumber);
 }
 
 async function gameMenuSelect1() {
@@ -79,9 +145,13 @@ async function gameMenuSelect1() {
   await oneOneFunc();
   await delay(200);
   $battleMenu.classList.toggle("hidden");
-  addEventListener("submit", (event) => {
+  $battleMenu.addEventListener("submit", (event) => {
+    if ($battleMenu.classList.contains("hidden")) {
+      return;
+    }
     event.preventDefault();
     const battleSelectNumber = event.target["battle-menu__battle-input"].value;
+    event.target["battle-menu__battle-input"].value = "";
     if (battleSelectNumber == 1) {
       battleMenuSelect1(randomNumber);
     } else if (battleSelectNumber == 2) {
@@ -96,6 +166,9 @@ function gameMenuSelect2() {}
 function gameMenuSelect3() {}
 
 $startScreen.addEventListener("submit", (event) => {
+  if ($startScreen.classList.contains("hidden")) {
+    return;
+  }
   event.preventDefault();
   const name = event.target["start-screen__name-input"].value;
   $startScreen.classList.toggle("hidden");
@@ -107,9 +180,13 @@ $startScreen.addEventListener("submit", (event) => {
   $heroXp.textContent = `XP: ${hero.xp}/${15 * hero.level}`;
   $heroAtt.textContent = `ATT: ${hero.att}`;
   hero.name = name;
+  event.target["start-screen__name-input"].value = "";
 });
 
 $gameMenu.addEventListener("submit", (event) => {
+  if ($gameMenu.classList.contains("hidden")) {
+    return;
+  }
   event.preventDefault();
   const number = event.target["game-menu__input-number"].value;
   event.target["game-menu__input-number"].value = "";

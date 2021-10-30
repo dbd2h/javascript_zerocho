@@ -14,6 +14,7 @@ const $monsterAtt = document.querySelector(".monster-inf__monster-att");
 const $message = document.querySelector(".message");
 let oneOneString = null;
 let monsterHp = null;
+let randomNumber = null;
 
 function reset() {
   $message.innerHTML = "";
@@ -46,6 +47,12 @@ async function oneOneFunc() {
   }
 }
 
+function hiddenCheck(tag) {
+  if (tag.classList.contains("hidden")) {
+    return;
+  }
+}
+
 async function levelUp() {
   if (hero.xp >= hero.level * 15) {
     hero.xp -= $heroLevel * 15;
@@ -69,11 +76,20 @@ async function levelUp() {
   return;
 }
 
-async function monsterAtt(randomNumber) {
+async function monsterAtt() {
   oneOneString = `${monsterList[randomNumber].name}의 공격`;
   await oneOneFunc();
-  await delay(200);
+  await delay(1000);
   hero.hp -= monsterList[randomNumber].att;
+  if (hero.hp <= 0) {
+    hero.hp = 0;
+    $heroHp.innerHTML = `HP: ${hero.hp}/${hero.maxHp}`;
+    oneOneString = "용사는 패배했다...";
+    await oneOneFunc();
+    await delay(1000);
+    reset();
+    return;
+  }
   $heroHp.innerHTML = `HP: ${hero.hp}/${hero.maxHp}`;
   await delay(1000);
   $battleMenu.classList.toggle("hidden");
@@ -95,16 +111,16 @@ const monsterList = [
   { name: "마왕", hp: 150, att: 35, xp: 50 },
 ];
 
-async function battleMenuSelect1(randomNumber) {
+async function battleMenuSelect1() {
   $battleMenu.classList.toggle("hidden");
-  oneOneString = "플레이어의 공격!";
+  oneOneString = "용사의 공격!";
   await oneOneFunc();
   await delay(200);
   monsterHp -= hero.att;
   if (monsterHp <= 0) {
     $monsterHp.innerHTML = `HP: 0/${monsterList[randomNumber].hp}`;
     await delay(200);
-    oneOneString = "플레이어의 승리";
+    oneOneString = "용사의 승리";
     await oneOneFunc();
     await delay(1000);
     hero.xp += monsterList[randomNumber].xp;
@@ -119,7 +135,33 @@ async function battleMenuSelect1(randomNumber) {
   }
   $monsterHp.innerHTML = `HP: ${monsterHp}/${monsterList[randomNumber].hp}`;
   await delay(1000);
-  monsterAtt(randomNumber);
+  await monsterAtt(randomNumber);
+}
+
+async function battleMenuSelect2() {
+  $battleMenu.classList.toggle("hidden");
+  let healingMount;
+  if (hero.hp + 15 * hero.level >= hero.maxHp) {
+    healingMount = hero.maxHp - hero.hp;
+  } else {
+    healingMount = hero.level * 15;
+  }
+  oneOneString = `용사는 체력 ${healingMount}만큼을 회복했다.`;
+  await oneOneFunc();
+  hero.hp += healingMount;
+  $heroHp.innerHTML = `HP: ${hero.hp}/${hero.maxHp}`;
+  await delay(1000);
+  await monsterAtt(randomNumber);
+}
+
+async function battleMenuSelect3() {
+  $battleMenu.classList.toggle("hidden");
+  oneOneString = "용사는 도망쳤다.";
+  await oneOneFunc();
+  await delay(1000);
+  $message.innerHTML = "";
+  $monsterInf.classList.toggle("hidden");
+  $gameMenu.classList.toggle("hidden");
 }
 
 async function gameMenuSelect1() {
@@ -133,7 +175,7 @@ async function gameMenuSelect1() {
   } else if (hero.level >= 5) {
     randomNumberStan = 3;
   }
-  const randomNumber = Math.floor(Math.random() * randomNumberStan);
+  randomNumber = Math.floor(Math.random() * randomNumberStan);
   $monsterName.innerHTML = monsterList[randomNumber].name;
   monsterHp = monsterList[randomNumber].hp;
   $monsterHp.innerHTML = `HP: ${monsterHp}/${monsterList[randomNumber].hp}`;
@@ -145,30 +187,28 @@ async function gameMenuSelect1() {
   await oneOneFunc();
   await delay(200);
   $battleMenu.classList.toggle("hidden");
-  $battleMenu.addEventListener("submit", (event) => {
-    if ($battleMenu.classList.contains("hidden")) {
-      return;
-    }
-    event.preventDefault();
-    const battleSelectNumber = event.target["battle-menu__battle-input"].value;
-    event.target["battle-menu__battle-input"].value = "";
-    if (battleSelectNumber == 1) {
-      battleMenuSelect1(randomNumber);
-    } else if (battleSelectNumber == 2) {
-    } else if (battleSelectNumber == 3) {
-    } else {
-      alert("1,2,3 숫자중 하나를 입력해주세요.");
-    }
-  });
 }
-function gameMenuSelect2() {}
+async function gameMenuSelect2() {
+  $gameMenu.classList.toggle("hidden");
+  oneOneString = "용사는 체력을 모두 회복했다.";
+  await oneOneFunc();
+  hero.hp = hero.maxHp;
+  $heroHp.innerHTML = `HP: ${hero.hp}/${hero.maxHp}`;
+  await delay(1000);
+  $message.innerHTML = "";
+  $gameMenu.classList.toggle("hidden");
+}
 
-function gameMenuSelect3() {}
+async function gameMenuSelect3() {
+  $gameMenu.classList.toggle("hidden");
+  oneOneString = "안녕히 가세요 용사님~";
+  await oneOneFunc();
+  await delay(1000);
+  reset();
+}
 
 $startScreen.addEventListener("submit", (event) => {
-  if ($startScreen.classList.contains("hidden")) {
-    return;
-  }
+  hiddenCheck($startScreen);
   event.preventDefault();
   const name = event.target["start-screen__name-input"].value;
   $startScreen.classList.toggle("hidden");
@@ -184,16 +224,32 @@ $startScreen.addEventListener("submit", (event) => {
 });
 
 $gameMenu.addEventListener("submit", (event) => {
-  if ($gameMenu.classList.contains("hidden")) {
-    return;
-  }
+  hiddenCheck($gameMenu);
   event.preventDefault();
   const number = event.target["game-menu__input-number"].value;
   event.target["game-menu__input-number"].value = "";
   if (number == 1) {
     gameMenuSelect1();
   } else if (number == 2) {
+    gameMenuSelect2();
   } else if (number == 3) {
+    gameMenuSelect3();
+  } else {
+    alert("1,2,3 숫자중 하나를 입력해주세요.");
+  }
+});
+
+$battleMenu.addEventListener("submit", (event) => {
+  hiddenCheck($battleMenu);
+  event.preventDefault();
+  const battleSelectNumber = event.target["battle-menu__battle-input"].value;
+  event.target["battle-menu__battle-input"].value = "";
+  if (battleSelectNumber == 1) {
+    battleMenuSelect1(randomNumber);
+  } else if (battleSelectNumber == 2) {
+    battleMenuSelect2(randomNumber);
+  } else if (battleSelectNumber == 3) {
+    battleMenuSelect3();
   } else {
     alert("1,2,3 숫자중 하나를 입력해주세요.");
   }

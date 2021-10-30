@@ -3,10 +3,12 @@ const $input = document.querySelector("form>input:first-child");
 const $button = document.querySelector("form>input:last-child");
 const $number = document.querySelector(".kung-kung-dda__number");
 const $suggestion = document.querySelector(".kung-kung-dda__suggest");
+const $form = document.querySelector(".kung-kung-dda__form");
 let word;
 let newWord;
 
-function onClick() {
+function onSubmit(event) {
+  event.preventDefault();
   if ((!word || word[word.length - 1] == newWord[0]) && newWord.length == 3) {
     word = newWord;
     $suggestion.textContent = word;
@@ -30,4 +32,4 @@ function onInput(event) {
 }
 
 $input.addEventListener("input", onInput);
-$button.addEventListener("click", onClick);
+$form.addEventListener("submit", onSubmit);

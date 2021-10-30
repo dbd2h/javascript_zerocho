@@ -188,6 +188,7 @@ async function gameMenuSelect1() {
   await delay(200);
   $battleMenu.classList.toggle("hidden");
 }
+
 async function gameMenuSelect2() {
   $gameMenu.classList.toggle("hidden");
   oneOneString = "용사는 체력을 모두 회복했다.";

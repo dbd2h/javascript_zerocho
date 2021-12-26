@@ -55,13 +55,14 @@ function hiddenCheck(tag) {
 
 async function levelUp() {
   if (hero.xp >= hero.level * 15) {
-    hero.xp -= $heroLevel * 15;
+    hero.xp -= hero.level * 15;
     hero.level += 1;
     await delay(200);
     $heroXp.innerHTML = `XP: ${hero.xp}/${hero.level * 15}`;
+    $heroLevel.innerHTML = `level: ${hero.level}`;
     oneOneString = `레벨업! ${hero.level}레벨이 되었다.`;
     await oneOneFunc();
-    await delay(200);
+    await delay(1000);
     hero.maxHp = hero.level * 50 + 50;
     hero.hp = hero.maxHp;
     hero.att = hero.att + 5;
@@ -69,7 +70,8 @@ async function levelUp() {
     $heroAtt.innerHTML = `Att: ${hero.att}`;
     oneOneString = "플레이어의 최대체력과 공격력이 올라갔다.";
     await oneOneFunc();
-    await delay(200);
+    await delay(1000);
+    $message.innerHTML = "";
     return;
   }
   $heroXp.innerHTML = `XP: ${hero.xp}/${hero.level * 15}`;
@@ -126,8 +128,7 @@ async function battleMenuSelect1() {
     hero.xp += monsterList[randomNumber].xp;
     oneOneString = `경험치 ${monsterList[randomNumber].xp}xp 획득`;
     await oneOneFunc();
-    levelUp();
-    await delay(1000);
+    await levelUp();
     $gameMenu.classList.toggle("hidden");
     $monsterInf.classList.toggle("hidden");
     $message.innerHTML = "";
@@ -188,6 +189,7 @@ async function gameMenuSelect1() {
   await delay(200);
   $battleMenu.classList.toggle("hidden");
 }
+
 async function gameMenuSelect2() {
   $gameMenu.classList.toggle("hidden");
   oneOneString = "용사는 체력을 모두 회복했다.";

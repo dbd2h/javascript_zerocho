@@ -1,8 +1,58 @@
 .game-board {
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 header {
   display: flex;
   justify-content: space-evenly;
+}
+table {
+  display: inline-block;
+  border-collapse: collapse;
+}
+td {
+  height: 40px;
+  width: 40px;
+  text-align: center;
+}
+.light {
+  background-color: #aad751;
+}
+.dark {
+  background-color: #a2d149;
+}
+.opened-light {
+  background-color: #e5c29f;
+}
+.opened-dark {
+  background-color: #d7b899;
+}
+.opened > span {
+  opacity: 1;
+}
+.hidden {
+  display: none;
+}
+.num {
+  font-weight: 600;
+  font-size: 20px;
+}
+.one > .num {
+  color: #1976d2;
+}
+.two > .num {
+  color: #388e3c;
+}
+.three > .num {
+  color: #d33231;
+}
+.four > .num {
+  color: #7b1fa2;
+}
+.five > .num {
+  color: #ff9002;
+}
+.flagged {
+  color: red;
 }

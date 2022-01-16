@@ -6,6 +6,7 @@
 header {
   display: flex;
   justify-content: space-evenly;
+  background-color: #4a752c;
 }
 table {
   display: inline-block;
@@ -53,6 +54,14 @@ td {
 .five > .num {
   color: #ff9002;
 }
-.flagged {
+.fa-flag {
   color: red;
+}
+.timer {
+  font-size: 30px;
+  color: white;
+}
+.total {
+  font-size: 30px;
+  color: white;
 }

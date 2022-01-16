@@ -1,4 +1,7 @@
 const $gameBoard = document.querySelector(".game-board");
+const $timer = document.querySelector(".timer");
+const $total = document.querySelector(".total");
+const $header = document.querySelector("header");
 const mines = [];
 const rows = [];
 const row = 14;
@@ -7,6 +10,28 @@ let remains = 20;
 const mineValue = remains;
 let finish = false;
 let check = 0;
+let timerCount = 0;
+
+function flagRemain() {
+  $i = document.createElement("i");
+  $i.setAttribute("class", "fas fa-flag");
+  $total.innerHTML = "";
+  $total.append($i);
+  $total.innerHTML += `  ${remains}`;
+}
+
+function timer() {
+  if (timerCount < 10) {
+    $timer.innerHTML = "00" + String(timerCount);
+  } else if (timerCount < 100) {
+    $timer.innerHTML = "0" + String(timerCount);
+  } else if (timerCount < 1000) {
+    $timer.innerHTML = String(timerCount);
+  } else {
+    $timer.innerHTML = "999";
+  }
+  timerCount++;
+}
 
 function mineLocation(find) {
   // 위치 찾기
@@ -82,7 +107,17 @@ function mineSetting() {
 }
 function gameMaker() {
   //게임 실행
+  flagRemain();
+  $timer.innerHTML = "000";
   const $table = document.createElement("table");
+  $table.addEventListener(
+    "click",
+    (timerSetting = (event) => {
+      timer();
+      timerStart = setInterval(timer, 1000);
+      $table.removeEventListener("click", timerSetting);
+    })
+  );
   let back = true;
   for (let i = 0; i < column; i++) {
     const $tr = document.createElement("tr");
@@ -120,11 +155,17 @@ function gameMaker() {
       $td.addEventListener("contextmenu", (event) => {
         //우클릭
         event.preventDefault();
-        if ($td.classList.contains("opened")) {
+        if ($td.classList.contains("opened") || finish) {
           return;
         }
         $flagbox.classList.toggle("hidden");
         $td.classList.toggle("flagged");
+        if ($td.classList.contains("flagged")) {
+          remains--;
+        } else {
+          remains++;
+        }
+        flagRemain();
       });
       $td.addEventListener(
         "click",
@@ -143,6 +184,9 @@ function gameMaker() {
             const $div = document.createElement("div");
             $div.innerHTML = "지뢰를 밟으셨군요... 패배..";
             $gameBoard.append($div);
+            setTimeout(() => {
+              clearInterval(timerStart);
+            }, 0);
           }
           event.target.classList.add("opened");
           event.target.childNodes[0].classList.remove("hidden");
@@ -180,6 +224,7 @@ function gameMaker() {
             const $div = document.createElement("div");
             $div.innerHTML = "축하드립니다. 모든 지뢰를 찾았습니다.";
             $gameBoard.append($div);
+            clearInterval(timerStart);
           }
         })
       );
@@ -192,6 +237,12 @@ function gameMaker() {
     rows.push(cells);
   }
   $gameBoard.append($table);
+  window.addEventListener("resize", () => {
+    $header.style.width = `${$table.offsetWidth}px`;
+    $header.style.height = `${$table.offsetHeight / column}px`;
+  });
+  $header.style.width = `${$table.offsetWidth}px`;
+  $header.style.height = `${$table.offsetHeight / column}px`;
 }
 mineSetting();
 gameMaker();
